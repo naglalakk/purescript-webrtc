@@ -53,8 +53,8 @@ newMediaRecorder :: forall m
 newMediaRecorder stream = liftEffect $ _newMediaRecorder stream
 
 -- Recorder Event handler types
-ondataavailable :: E.EventType
-ondataavailable = E.EventType "ondataavailable"
+dataavailable :: E.EventType
+dataavailable = E.EventType "dataavailable"
 
 mediaRecorderEventTarget :: MediaRecorder -> EventTarget
 mediaRecorderEventTarget = unsafeCoerce

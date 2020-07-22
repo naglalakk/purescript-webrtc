@@ -126,5 +126,5 @@ main = launchAff_ do
   -- Pass stream to recorder
   recorder <- newMediaRecorder stream
   onRecorderDataListener <- liftEffect $ ET.eventListener onRecorderData
-  _ <- liftEffect $ ET.addEventListener ondataavailable onRecorderDataListener true (mediaRecorderEventTarget recorder)
+  _ <- liftEffect $ ET.addEventListener dataavailable onRecorderDataListener true (mediaRecorderEventTarget recorder)
   logShow "Done"
