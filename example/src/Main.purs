@@ -18,8 +18,6 @@ import Foreign                      (F, Foreign, readString)
 import Foreign.Index                ((!))
 import Foreign.JSON                 (decodeJSONWith)
 import Unsafe.Coerce                (unsafeCoerce)
-import Web.Socket.Event.EventTypes  as WEventTypes
-import Web.Socket.WebSocket         as WS
 import Web.Event.EventTarget        as ET
 import Web.Event.Internal.Types     (Event)
 
@@ -41,75 +39,11 @@ rtcConfig = fold
     ]
   ]
 
-type Message =
-  { data :: String
-  }
-
-type Response =
-  { "type" :: String
-  , "sdp"  :: String
-  }
-
-strToResponse :: String -> Response
-strToResponse = unsafeCoerce
-
-eventToStr :: Event -> Message
-eventToStr = unsafeCoerce
-
-newtype MessageData = MessageData
-  { from    :: String
-  , to      :: String
-  , "type"  :: String
-  , "data"  :: String
-  }
-
-derive instance genericMessageData :: Generic MessageData _
-
-instance showMessageData :: Show MessageData where
-  show (MessageData message) = show message
-
-readMessageData :: Foreign -> F MessageData
-readMessageData value = do
-  from <- value ! "from" >>= readString
-  to   <- value ! "to"   >>= readString
-  type_ <- value ! "type" >>= readString
-  data_ <- value ! "data" >>= readString
-  pure $ MessageData { from: from, to: to, "type":type_, "data": data_}
-
-onMessage :: Event -> Effect Unit
-onMessage e = do
-  let 
-    msg = eventToStr e
-    de = decodeJSONWith readMessageData msg.data
-    resp = runExcept de
-  case resp of
-    Right (MessageData msg) -> do
-      logShow $ MessageData msg
-      case msg.type of
-        "offer" ->  pure unit
-        "answer" -> pure unit
-        _ -> pure unit
-    Left err -> do
-      logShow err
-      pure unit
-
-openCallback :: Event -> Effect Unit
-openCallback e = do
-  logShow "On open"
-
-onRecorderData :: Event -> Effect Unit
-onRecorderData event = do
-  logShow "record data"
-
 main :: Effect Unit
 main = launchAff_ do
-  ws <- liftEffect $ WS.create "ws://localhost:1234" []
-  let 
-    wsTarget = WS.toEventTarget ws
-  el <- liftEffect $ ET.eventListener openCallback
-  msg <- liftEffect $ ET.eventListener onMessage
-  _ <- liftEffect $ ET.addEventListener WEventTypes.onMessage msg true wsTarget
-  _ <- liftEffect $ ET.addEventListener WEventTypes.onOpen el true wsTarget
+  -- Create connection for pc1, pc2
+  pc1 <- newRTCPeerConnection rtcConfig
+  pc2 <- newRTCPeerConnection rtcConfig
   let 
     offerOptions = RTCOfferOptions
       { iceRestart: false
@@ -118,13 +52,38 @@ main = launchAff_ do
       , voiceActivityDetection: false
       }
 
-  logShow "Getting stream"
+  -- Get stream from user
   stream <- getUserMedia $ MediaStreamConstraints
     { audio: true
     , video: true 
     }
-  -- Pass stream to recorder
-  recorder <- newMediaRecorder stream
-  onRecorderDataListener <- liftEffect $ ET.eventListener onRecorderData
-  _ <- liftEffect $ ET.addEventListener dataavailable onRecorderDataListener true (mediaRecorderEventTarget recorder)
-  logShow "Done"
+
+  -- Get tracks of stream
+  tracks <- getTracks stream
+
+  -- Add local stream to pc1
+  for_ tracks \t ->
+    addTrack pc1 t stream
+
+  -- Create offer with pc1
+  offer <- createOffer pc1 offerOptions
+  case offer of
+    Right desc -> do
+      -- Set localDescription of pc1
+      setLocalDescription pc1 desc
+
+      -- Set remoteDescription of pc2
+      setRemoteDescription pc2 desc
+
+      -- Create an answer with pc2
+      answer <- createAnswer pc2
+      
+      case answer of
+        Right aDesc -> do
+          -- Set localDescription of pc2
+          setLocalDescription pc2 aDesc
+
+          -- Set remoteDescription of pc1
+          setRemoteDescription pc1 aDesc
+        Left err -> logShow err
+    Left err -> logShow err

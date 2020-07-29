@@ -2,7 +2,6 @@
 
 exports._getTracks = function(stream) {
     return function() {
-        console.log(stream.getTracks());
         return stream.getTracks();
     }
 }

@@ -18,12 +18,12 @@ instance showRTCSdpType :: Show RTCSdpType where
   show Rollback = "rollback"
 
 newtype RTCSessionDescription = RTCSessionDescription
-  { type_ :: RTCSdpType
+  { "type" :: RTCSdpType
   , sdp   :: String
   }
 
 instance showRTCSessionDescription :: Show RTCSessionDescription where
-  show (RTCSessionDescription desc) = "{ type: " <> (show desc.type_) <> ", sdp: " <> desc.sdp <> " }"
+  show (RTCSessionDescription desc) = "{ type: " <> (show desc.type) <> ", sdp: " <> desc.sdp <> " }"
 
 strToRTCSdpType :: String -> RTCSdpType
 strToRTCSdpType str
@@ -38,7 +38,7 @@ readRTCSessionDescription value = do
   type_ <- value ! "type" >>= readString
   sdp   <- value ! "sdp"  >>= readString
   pure $ RTCSessionDescription 
-    { type_: strToRTCSdpType type_
+    { "type": strToRTCSdpType type_
     , sdp: sdp
     }
 

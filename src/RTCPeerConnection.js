@@ -19,7 +19,6 @@ exports._createAnswer = function(conn) {
 exports._createOffer = function(conn) {
     return function(options) {
         return function() {
-            console.log(options);
             return conn.createOffer(options);
         }
     }

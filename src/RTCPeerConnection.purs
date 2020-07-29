@@ -12,6 +12,9 @@ import Effect.Aff                       (Aff)
 import Effect.Aff.Class                 (class MonadAff)
 import Effect.Class                     (class MonadEffect, liftEffect)
 import Foreign                          (Foreign, MultipleErrors, unsafeToForeign)
+import Unsafe.Coerce                    (unsafeCoerce)
+import Web.Event.Event                  as E
+import Web.Event.Internal.Types         (EventTarget)
 
 import WebRTC.MediaStream               (MediaStream)
 import WebRTC.MediaStreamTrack          (MediaStreamTrack)
@@ -41,11 +44,13 @@ addTrack :: forall m
          -> m RTCRtpSender 
 addTrack conn track stream = liftEffect $ _addTrack conn track stream
 
-foreign import _createAnswer :: RTCPeerConnection -> Effect (P.Promise RTCSessionDescription)
+foreign import _createAnswer :: RTCPeerConnection -> Effect (P.Promise Foreign)
 
 createAnswer :: RTCPeerConnection
-             -> Aff RTCSessionDescription
-createAnswer conn = P.toAffE $ _createAnswer conn
+             -> Aff (Either MultipleErrors RTCSessionDescription)
+createAnswer conn = do
+  resolv <- P.toAffE $ _createAnswer conn
+  pure $ runExcept $ readRTCSessionDescription resolv
 
 foreign import _createOffer :: RTCPeerConnection -> Foreign -> Effect (P.Promise Foreign)
 
@@ -82,7 +87,7 @@ setLocalDescription :: RTCPeerConnection
 setLocalDescription conn (RTCSessionDescription desc) = P.toAffE $ _setLocalDescription conn descForeign
   where
     descForeign = unsafeToForeign $
-      { "type": (show desc.type_)
+      { "type": (show desc.type)
       , "sdp": desc.sdp
       }
 
@@ -94,6 +99,19 @@ setRemoteDescription :: RTCPeerConnection
 setRemoteDescription conn (RTCSessionDescription desc) = P.toAffE $ _setRemoteDescription conn descForeign
   where
     descForeign = unsafeToForeign $
-      { "type": (show desc.type_)
+      { "type": (show desc.type)
       , "sdp": desc.sdp
       }
+
+-- Events
+ontrack :: E.EventType
+ontrack = E.EventType "ontrack"
+
+icecandidate :: E.EventType
+icecandidate = E.EventType "icecandidate"
+
+iceconnectionstatechange :: E.EventType
+iceconnectionstatechange = E.EventType "iceconnectionstatechange"
+
+rtcPeerConnectionTarget :: RTCPeerConnection -> EventTarget
+rtcPeerConnectionTarget = unsafeCoerce
