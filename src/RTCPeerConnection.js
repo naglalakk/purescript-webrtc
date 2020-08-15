@@ -56,7 +56,7 @@ exports._setRemoteDescription = function(conn) {
 exports._addIceCandidate = function(conn) {
     return function(candidate) {
         return function() {
-            return conn.addIceCandidate(candidate);
+            return conn.addIceCandidate(new RTCIceCandidate(candidate));
         }
     }
 
