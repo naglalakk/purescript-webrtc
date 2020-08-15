@@ -20,6 +20,7 @@ import WebRTC.MediaStream               (MediaStream)
 import WebRTC.MediaStreamTrack          (MediaStreamTrack)
 import WebRTC.RTCConfiguration          (RTCConfiguration)
 import WebRTC.RTCCertificate            (RTCCertificate, RTCCertificateConfig)
+import WebRTC.RTCIceCandidate           (RTCIceCandidate)
 import WebRTC.RTCRtpSender              (RTCRtpSender)
 import WebRTC.RTCSessionDescription     (RTCSessionDescription(..), readRTCSessionDescription)
 
@@ -102,6 +103,11 @@ setRemoteDescription conn (RTCSessionDescription desc) = P.toAffE $ _setRemoteDe
       { "type": (show desc.type)
       , "sdp": desc.sdp
       }
+
+foreign import _addIceCandidate :: RTCPeerConnection -> RTCIceCandidate -> Effect (P.Promise Unit)
+
+addIceCandidate :: RTCPeerConnection -> RTCIceCandidate -> Aff Unit
+addIceCandidate conn candidate = P.toAffE $ _addIceCandidate conn candidate
 
 -- Events
 ontrack :: E.EventType

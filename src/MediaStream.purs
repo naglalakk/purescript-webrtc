@@ -60,11 +60,11 @@ dataavailable = E.EventType "dataavailable"
 mediaRecorderEventTarget :: MediaRecorder -> EventTarget
 mediaRecorderEventTarget = unsafeCoerce
 
-foreign import _setSrcObject :: HTMLMediaElement -> MediaStream -> Effect Unit
+foreign import _setSrcObject :: String -> MediaStream -> Effect Unit
 
 setSrcObject :: forall m
               . MonadEffect m
-             => HTMLMediaElement
+             => String 
              -> MediaStream
              -> m Unit
 setSrcObject element stream = liftEffect $ _setSrcObject element stream

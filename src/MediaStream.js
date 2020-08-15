@@ -52,7 +52,8 @@ exports.stop = function(recorder) {
 exports._setSrcObject = function(element) {
     return function(stream) {
         return function() {
-            element.srcObject = stream;
+            var elem = document.getElementById(element);
+            elem.srcObject = stream;
         }
     }
 }
