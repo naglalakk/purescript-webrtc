@@ -1,15 +1,16 @@
 module WebRTC.MediaStream where
 
 import Prelude
-import Control.Promise          as P
-import Effect                   (Effect)
-import Effect.Aff               (Aff())
-import Effect.Class             (class MonadEffect, liftEffect)
-import Unsafe.Coerce            (unsafeCoerce)
-import Web.Event.Event          as E
-import Web.Event.Internal.Types (EventTarget)
-import Web.File.Blob            (Blob)
-import WebRTC.MediaStreamTrack  (MediaStreamTrack)
+import Control.Promise              as P
+import Effect                       (Effect)
+import Effect.Aff                   (Aff())
+import Effect.Class                 (class MonadEffect, liftEffect)
+import Unsafe.Coerce                (unsafeCoerce)
+import Web.Event.Event              as E
+import Web.Event.Internal.Types     (EventTarget)
+import Web.File.Blob                (Blob)
+import Web.HTML.HTMLMediaElement    (HTMLMediaElement)
+import WebRTC.MediaStreamTrack      (MediaStreamTrack)
 
 foreign import data MediaStream :: Type
 
@@ -58,3 +59,12 @@ dataavailable = E.EventType "dataavailable"
 
 mediaRecorderEventTarget :: MediaRecorder -> EventTarget
 mediaRecorderEventTarget = unsafeCoerce
+
+foreign import _setSrcObject :: HTMLMediaElement -> MediaStream -> Effect Unit
+
+setSrcObject :: forall m
+              . MonadEffect m
+             => HTMLMediaElement
+             -> MediaStream
+             -> m Unit
+setSrcObject element stream = liftEffect $ _setSrcObject element stream

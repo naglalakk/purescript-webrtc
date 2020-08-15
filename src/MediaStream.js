@@ -48,3 +48,11 @@ exports.stop = function(recorder) {
         recorder.stop();
     }
 }
+
+exports._setSrcObject = function(element) {
+    return function(stream) {
+        return function() {
+            element.srcObject = stream;
+        }
+    }
+}
