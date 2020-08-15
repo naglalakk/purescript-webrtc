@@ -111,6 +111,12 @@ addIceCandidate conn candidate = P.toAffE $ _addIceCandidate conn candidate
 
 foreign import _candidateFromString :: String -> Effect RTCIceCandidate
 
+candidateFromString :: forall m
+                     . MonadEffect m
+                    => String 
+                    -> m RTCIceCandidate
+candidateFromString str = liftEffect $ _candidateFromString str
+
 -- Events
 ontrack :: E.EventType
 ontrack = E.EventType "ontrack"
