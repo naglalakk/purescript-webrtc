@@ -61,3 +61,9 @@ exports._addIceCandidate = function(conn) {
     }
 
 }
+
+exports._candidateFromString = function(candidateStr) {
+    return function() {
+        return JSON.parse(candidateStr);
+    }
+}

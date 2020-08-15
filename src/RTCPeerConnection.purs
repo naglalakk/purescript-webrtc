@@ -109,6 +109,8 @@ foreign import _addIceCandidate :: RTCPeerConnection -> RTCIceCandidate -> Effec
 addIceCandidate :: RTCPeerConnection -> RTCIceCandidate -> Aff Unit
 addIceCandidate conn candidate = P.toAffE $ _addIceCandidate conn candidate
 
+foreign import _candidateFromString :: String -> RTCIceCandidate
+
 -- Events
 ontrack :: E.EventType
 ontrack = E.EventType "ontrack"
