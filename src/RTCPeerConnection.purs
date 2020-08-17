@@ -119,7 +119,7 @@ candidateFromString str = liftEffect $ _candidateFromString str
 
 -- Events
 ontrack :: E.EventType
-ontrack = E.EventType "ontrack"
+ontrack = E.EventType "track"
 
 icecandidate :: E.EventType
 icecandidate = E.EventType "icecandidate"
