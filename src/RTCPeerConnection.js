@@ -62,8 +62,15 @@ exports._addIceCandidate = function(conn) {
 
 }
 
+exports._close = function(conn) {
+    return function() {
+        conn.close();
+    }
+}
+
 exports._candidateFromString = function(candidateStr) {
     return function() {
         return JSON.parse(candidateStr);
     }
 }
+

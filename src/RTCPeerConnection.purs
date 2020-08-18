@@ -111,6 +111,14 @@ addIceCandidate conn candidate = P.toAffE $ _addIceCandidate conn candidate
 
 foreign import _candidateFromString :: String -> Effect RTCIceCandidate
 
+foreign import _close :: RTCPeerConnection -> Effect Unit
+
+close :: forall m
+       . MonadEffect m
+      => RTCPeerConnection
+      -> m Unit
+close conn = liftEffect $ _close conn
+
 candidateFromString :: forall m
                      . MonadEffect m
                     => String 
