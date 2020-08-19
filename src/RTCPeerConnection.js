@@ -68,6 +68,12 @@ exports._close = function(conn) {
     }
 }
 
+exports._iceConnectionState = function(conn) {
+    return function() {
+        return conn.iceConnectionState;
+    }
+}
+
 exports._candidateFromString = function(candidateStr) {
     return function() {
         return JSON.parse(candidateStr);

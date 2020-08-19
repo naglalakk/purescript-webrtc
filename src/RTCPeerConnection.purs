@@ -119,6 +119,14 @@ close :: forall m
       -> m Unit
 close conn = liftEffect $ _close conn
 
+foreign import _iceConnectionState :: RTCPeerConnection -> Effect String
+
+iceConnectionState :: forall m
+                    . MonadEffect m
+                   => RTCPeerConnection
+                   -> m String
+iceConnectionState conn = liftEffect $ _iceConnectionState conn
+
 candidateFromString :: forall m
                      . MonadEffect m
                     => String 
