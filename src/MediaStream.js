@@ -15,7 +15,11 @@ exports._getUserMedia = function(constraints) {
 /* Media Recorder */
 exports._newMediaRecorder = function(stream) {
     return function() {
-        return new MediaRecorder(stream);
+        /* TODO: make this actual options */
+        var options = {
+            mimeType: 'video/webm'
+        };
+        return new MediaRecorder(stream, options);
     }
 }
 
@@ -57,3 +61,5 @@ exports._setSrcObject = function(element) {
         }
     }
 }
+
+
