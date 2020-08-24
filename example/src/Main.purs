@@ -21,11 +21,7 @@ import Unsafe.Coerce                (unsafeCoerce)
 import Web.Event.EventTarget        as ET
 import Web.Event.Internal.Types     (Event)
 
-import WebRTC.MediaStream
-import WebRTC.RTCPeerConnection
-import WebRTC.RTCConfiguration
-import WebRTC.RTCIceServer
-import WebRTC.RTCSessionDescription (readRTCSessionDescription)
+import WebRTC
 
 rtcConfig :: Options RTCConfiguration
 rtcConfig = fold

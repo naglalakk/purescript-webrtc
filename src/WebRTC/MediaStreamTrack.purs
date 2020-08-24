@@ -8,8 +8,8 @@ foreign import data MediaStreamTrack :: Type
 
 foreign import _stop :: MediaStreamTrack -> Effect Unit
 
-stop :: forall m
-      . MonadEffect m
-     => MediaStreamTrack
-     -> m Unit
-stop track = liftEffect $ _stop track
+stopTrack :: forall m
+           . MonadEffect m
+          => MediaStreamTrack
+          -> m Unit
+stopTrack track = liftEffect $ _stop track

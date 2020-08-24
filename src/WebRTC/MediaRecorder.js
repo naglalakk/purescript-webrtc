@@ -1,17 +1,3 @@
-// module WebRTC.MediaStream
-
-exports._getTracks = function(stream) {
-    return function() {
-        return stream.getTracks();
-    }
-}
-
-exports._getUserMedia = function(constraints) { 
-    return function() {
-        return navigator.mediaDevices.getUserMedia(constraints);
-    }
-}
-
 /* Media Recorder */
 exports._newMediaRecorder = function(stream) {
     return function() {
@@ -52,14 +38,3 @@ exports.stop = function(recorder) {
         recorder.stop();
     }
 }
-
-exports._setSrcObject = function(element) {
-    return function(stream) {
-        return function() {
-            var elem = document.getElementById(element);
-            elem.srcObject = stream;
-        }
-    }
-}
-
-
