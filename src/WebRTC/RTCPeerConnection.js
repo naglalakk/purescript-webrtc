@@ -1,6 +1,6 @@
 // module WebRTC.RTCPeerConnection
 
-exports._addTrack = function(conn) {
+export const _addTrack = function(conn) {
     return function(track) {
         return function(stream) {
             return function() {
@@ -10,13 +10,13 @@ exports._addTrack = function(conn) {
     }
 }
 
-exports._createAnswer = function(conn) {
+export const _createAnswer = function(conn) {
     return function() {
         return conn.createAnswer();
     }
 }
 
-exports._createOffer = function(conn) {
+export const _createOffer = function(conn) {
     return function(options) {
         return function() {
             return conn.createOffer(options);
@@ -24,20 +24,20 @@ exports._createOffer = function(conn) {
     }
 }
 
-exports._generateCertificate = function(configuration) {
+export const _generateCertificate = function(configuration) {
     return function() {
         return RTCPeerConnection.generateCertificate(config)
     }
 }
 
-exports._newRTCPeerConnection = function(configuration) {
+export const _newRTCPeerConnection = function(configuration) {
     return function() {
         var conn = new RTCPeerConnection(configuration);
         return conn;
     }
 }
 
-exports._setLocalDescription = function(conn) {
+export const _setLocalDescription = function(conn) {
     return function(description) {
         return function() {
             return conn.setLocalDescription(description);
@@ -45,7 +45,7 @@ exports._setLocalDescription = function(conn) {
     }
 }
 
-exports._setRemoteDescription = function(conn) {
+export const _setRemoteDescription = function(conn) {
     return function(description) {
         return function() {
             return conn.setRemoteDescription(description);
@@ -53,7 +53,7 @@ exports._setRemoteDescription = function(conn) {
     }
 }
 
-exports._addIceCandidate = function(conn) {
+export const _addIceCandidate = function(conn) {
     return function(candidate) {
         return function() {
             return conn.addIceCandidate(new RTCIceCandidate(candidate));
@@ -62,19 +62,19 @@ exports._addIceCandidate = function(conn) {
 
 }
 
-exports._close = function(conn) {
+export const _close = function(conn) {
     return function() {
         conn.close();
     }
 }
 
-exports._iceConnectionState = function(conn) {
+export const _iceConnectionState = function(conn) {
     return function() {
         return conn.iceConnectionState;
     }
 }
 
-exports._candidateFromString = function(candidateStr) {
+export const _candidateFromString = function(candidateStr) {
     return function() {
         return JSON.parse(candidateStr);
     }
