@@ -1,12 +1,12 @@
 // module WebRTC.MediaStream
 
-exports._getTracks = function(stream) {
+export const _getTracks = function(stream) {
     return function() {
         return stream.getTracks();
     }
 }
 
-exports._getUserMedia = function(constraints) { 
+export const _getUserMedia = function(constraints) {
     return function() {
         return navigator.mediaDevices.getUserMedia(constraints);
     }

@@ -2,7 +2,6 @@ module WebRTC.RTCIceServer where
 
 import Prelude
 import Data.Maybe           (Maybe(..), fromMaybe)
-import Data.Symbol          (SProxy(..))
 import Data.String.Common   (toLower)
 import Record               as Record
 

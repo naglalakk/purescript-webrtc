@@ -1,5 +1,5 @@
 /* Media Recorder */
-exports._newMediaRecorder = function(stream) {
+export const _newMediaRecorder = function(stream) {
     return function() {
         /* TODO: make this actual options */
         var options = {
@@ -9,31 +9,31 @@ exports._newMediaRecorder = function(stream) {
     }
 }
 
-exports.pause = function(recorder) {
+export const pause = function(recorder) {
     return function() {
         recorder.pause();
     }
 }
 
-exports.requestData = function(recorder) {
+export const requestData = function(recorder) {
     return function() {
         recorder.requestData();
     }
 }
 
-exports.resume = function(recorder) {
+export const resume = function(recorder) {
     return function() {
         recorder.resume();
     }
 }
 
-exports.start = function(recorder) {
+export const start = function(recorder) {
     return function() {
         recorder.start();
     }
 }
 
-exports.stop = function(recorder) {
+export const stop = function(recorder) {
     return function() {
         recorder.stop();
     }
